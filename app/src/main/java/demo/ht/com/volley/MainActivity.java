@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 };
             }
-
             @Override
             public Response.ErrorListener onErr() {
                 return new Response.ErrorListener() {
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        HashMap<String, String> hashMap = new HashMap<>();
+
         VolleyRequestUtil.getInstance(this).ImageRequest("http://api.map.baidu.com/images/weather/day/zhenyu.png", 0, 0, Bitmap.Config.ARGB_8888, new VolleyRequestUtil.VolleyImageInterface() {
             @Override
             public Response.Listener<Bitmap> onBitmap() {
@@ -123,18 +122,33 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-        VolleyRequestUtil.getInstance(this).POSTJsonObjectRequest("", hashMap, new VolleyRequestUtil.VolleyListenerInterface() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("key1","value1");
+        hashMap.put("key2","valye2");
+        hashMap.put("key3","value3");
+        VolleyRequestUtil.getInstance(this).POSTJsonObjectRequest("POST接口", hashMap, new VolleyRequestUtil.VolleyListenerInterface() {
             @Override
             public Response.Listener<JSONObject> onResponse() {
-                return null;
+                return new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                };
             }
 
             @Override
             public Response.ErrorListener onErr() {
-                return null;
+                return new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                };
             }
         });
+
+
     }
 
     /**
@@ -182,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Bitmap response) {
                 Log.i("ImageRequestResponse","1111");
-//                    mImage.setImageBitmap(response);
+                    mImage.setImageBitmap(response);
             }
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override

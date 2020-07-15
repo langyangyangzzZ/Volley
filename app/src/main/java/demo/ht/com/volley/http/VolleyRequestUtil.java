@@ -40,6 +40,7 @@ public class VolleyRequestUtil {
            synchronized (VolleyRequestUtil.class){
                if (mVolleyRequestUtil == null) {
                    mContext = context;
+
                    mVolleyRequestUtil = new VolleyRequestUtil();
                }
            }
@@ -70,15 +71,15 @@ public class VolleyRequestUtil {
      * @param volleyStringInterface 用于实现请求接口
      */
     public void StringRequest(String url, VolleyStringInterface volleyStringInterface){
-
         getVolley();
-
         StringRequest stringRequest = new StringRequest(url, volleyStringInterface.onStringResponse(), volleyStringInterface.onErr());
-
         requestQueue.add(stringRequest);
     }
 
 
+    /**
+     *  获取RequestQueue对象
+     */
    private void getVolley(){
        if (requestQueue == null) {
            requestQueue = Volley.newRequestQueue(mContext);
