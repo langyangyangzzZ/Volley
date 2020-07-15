@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
      *  封装volley
      */
     private void Encapsulated() {
-        VolleyRequestUtil.getInstance(this).StringRequest("http://cloud.byaero.cn/byaerogcs/params", new VolleyRequestUtil.VolleyStringInterface() {
+        VolleyRequestUtil.getInstance(this).StringRequest("", new VolleyRequestUtil.VolleyStringInterface() {
             @Override
             public Response.Listener<String> onStringResponse() {
                 return new Response.Listener<String>() {
