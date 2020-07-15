@@ -94,10 +94,14 @@ public class VolleyRequestUtil {
      */
     public void POSTJsonObjectRequest(String url, final HashMap hashMap, VolleyListenerInterface volleyListenerInterface){
         getVolley();
+        JSONObject jsonObject = new JSONObject(hashMap);
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,url,
-                null,volleyListenerInterface.onResponse(),volleyListenerInterface.onErr()){
+                jsonObject,volleyListenerInterface.onResponse(),volleyListenerInterface.onErr()){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                hashMap.put("Accept", "application/json");
+                hashMap.put("Content-Type", "application/json; charset=UTF-8");
                 return hashMap;
             }
         };

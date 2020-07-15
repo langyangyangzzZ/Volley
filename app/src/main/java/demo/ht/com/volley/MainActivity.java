@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private String STRINGREQUEST_URL = "StringRequest只建议用来请求文本接口  可以用https://www.baidu.com接口来尝试";
 
     //是否封装volley
-    private Boolean isEncapsulated = true;//true封装 flase不封装
+    private Boolean isEncapsulated = false;//true封装 flase不封装
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,16 +123,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("key1","value1");
-        hashMap.put("key2","valye2");
-        hashMap.put("key3","value3");
-        VolleyRequestUtil.getInstance(this).POSTJsonObjectRequest("POST接口", hashMap, new VolleyRequestUtil.VolleyListenerInterface() {
+        hashMap.put("app_key","74D2E724FE2B69EF7EA3F38E9400CF71");
+
+        VolleyRequestUtil.getInstance(this).POSTJsonObjectRequest("http://hn216.api.yesapi.cn/?s=App.User.Search", hashMap, new VolleyRequestUtil.VolleyListenerInterface() {
             @Override
             public Response.Listener<JSONObject> onResponse() {
                 return new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        Log.i("szjPOST",""+response);
                     }
                 };
             }
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 return new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.i("szjPOST onError",""+error.getMessage());
                     }
                 };
             }
@@ -171,26 +170,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,"POST接口", null, new Response.Listener<JSONObject>() {
+        Map params = new HashMap();
+        params.put("app_key", "74D2E724FE2B69EF7EA3F38E9400CF71");
+        JSONObject jsonObject = new JSONObject(params);
+        /**
+         *      参数一:POST声明
+         *      参数二: 请求POST路径
+         *      参数三:JSONObject设置POST的key和value
+         *      参数四:成功返回JSONObject
+         *      参数五:错误返回
+         */
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,"http://hn216.api.yesapi.cn/?s=App.User.Search",
+                jsonObject,
+                new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.i("JsonObjectResponse", response.toString());
+                Log.i("JsonObjectonResponse", response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("JsonObjectResponse", error.getMessage()+"");
+                Log.i("JsonObjecterr", error.getMessage()+"");
             }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("map1","1");
-                hashMap.put("map2","2");
-                hashMap.put("map3","3");
-                return hashMap;
-            }
-        };
+        });
 
         ImageRequest imageRequest = new ImageRequest("http://api.map.baidu.com/images/weather/day/zhenyu.png", new Response.Listener<Bitmap>() {
             @Override
