@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private String STRINGREQUEST_URL = "StringRequest只建议用来请求文本接口  可以用https://www.baidu.com接口来尝试";
 
     //是否封装volley
-    private Boolean isEncapsulated = false;//true封装 flase不封装
+    private Boolean isEncapsulated = true;//true封装 flase不封装
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +48,35 @@ public class MainActivity extends AppCompatActivity {
             //未封装volley
             NotEncapsulated();
         }
-
-
-
-
-
     }
 
     /**
      *  封装volley
      */
     private void Encapsulated() {
+        VolleyRequestUtil.getInstance(this).StringRequest("http://cloud.byaero.cn/byaerogcs/params", new VolleyRequestUtil.VolleyStringInterface() {
+            @Override
+            public Response.Listener<String> onStringResponse() {
+                return new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                            Log.i("VolleyStringRequest",response);
+                    }
+                };
+            }
+
+            @Override
+            public Response.ErrorListener onErr() {
+                return new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("VolleyStringRequest",error.getMessage());
+                    }
+                };
+            }
+        });
+
+
         VolleyRequestUtil.getInstance(this).GETJsonObjectRequest("http://www.weather.com.cn/data/city3jdata/china.html", new VolleyRequestUtil.VolleyListenerInterface() {
             @Override
             public Response.Listener<JSONObject> onResponse() {
@@ -82,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         HashMap<String, String> hashMap = new HashMap<>();
-
-
         VolleyRequestUtil.getInstance(this).ImageRequest("http://api.map.baidu.com/images/weather/day/zhenyu.png", 0, 0, Bitmap.Config.ARGB_8888, new VolleyRequestUtil.VolleyImageInterface() {
             @Override
             public Response.Listener<Bitmap> onBitmap() {
@@ -94,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 };
             }
-
             @Override
             public Response.ErrorListener onErr() {
                 return new Response.ErrorListener() {
@@ -105,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 };
             }
         });
+
+
 
 
         VolleyRequestUtil.getInstance(this).POSTJsonObjectRequest("", hashMap, new VolleyRequestUtil.VolleyListenerInterface() {
