@@ -7,22 +7,19 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
     <Button
-        android:text="加载图片"
-        android:id="@+id/button"
-        android:onClick="onClickButton"
+        android:text="Volley   Http"
+        android:id="@+id/button_volley"
+        android:onClick="onClickVolleyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        />
+    <Button
+        android:text="Retrofit  Http"
+        android:id="@+id/button_retrofit"
+        android:onClick="onClickRetrofitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-    <ImageView
-        android:id="@+id/image2"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        />
+
 
 </LinearLayout>

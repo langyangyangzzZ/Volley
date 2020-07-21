@@ -1,15 +1,13 @@
-package demo.ht.com.volley.http;
+package demo.ht.com.volley.volleyHttp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
