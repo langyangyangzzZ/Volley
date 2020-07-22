@@ -365,7 +365,7 @@ public class RetrofitActivity extends AppCompatActivity implements ICommonView {
         mTv.setText("使用失败:\n" + whichApi + "\n" + failedResult.getMessage());
     }
 
-
+ 
     public void onClickUrlButton(View view) {
         if (isEncapsulated) {
             /**

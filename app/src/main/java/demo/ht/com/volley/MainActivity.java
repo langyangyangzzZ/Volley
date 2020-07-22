@@ -1,285 +1,68 @@
 package demo.ht.com.volley;
 
 import androidx.appcompat.app.AppCompatActivity;
-import demo.ht.com.volley.http.VolleyRequestUtil;
 
-import android.graphics.Bitmap;
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.permissionx.guolindev.PermissionX;
+import com.permissionx.guolindev.callback.ExplainReasonCallbackWithBeforeParam;
+import com.permissionx.guolindev.callback.ForwardToSettingsCallback;
+import com.permissionx.guolindev.callback.RequestCallback;
+import com.permissionx.guolindev.request.ExplainScope;
+import com.permissionx.guolindev.request.ForwardScope;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView mImage,image2;
-    private String STRINGREQUEST_URL = "StringRequest只建议用来请求文本接口  可以用https://www.baidu.com接口来尝试";
-
-    //是否封装volley
-    private Boolean isEncapsulated = false;//true封装 flase不封装
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mImage = findViewById(R.id.image);
-        image2 = findViewById(R.id.image2);
-
-        if (isEncapsulated) {
-            //封装Volley
-            Encapsulated();
-        }else{
-            //未封装volley
-            NotEncapsulated();
-        }
-    }
-
-    /**
-     *  封装volley
-     */
-    private void Encapsulated() {
-        VolleyRequestUtil.getInstance(this).StringRequest(STRINGREQUEST_URL, new VolleyRequestUtil.VolleyStringInterface() {
-            @Override
-            public Response.Listener<String> onStringResponse() {
-                return new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                            Log.i("VolleyStringRequest",response);
-                    }
-                };
-            }
-            @Override
-            public Response.ErrorListener onErr() {
-                return new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("VolleyStringRequest",error.getMessage());
-                    }
-                };
-            }
-        });
 
 
-        VolleyRequestUtil.getInstance(this).GETJsonObjectRequest("http://www.weather.com.cn/data/city3jdata/china.html", new VolleyRequestUtil.VolleyListenerInterface() {
-            @Override
-            public Response.Listener<JSONObject> onResponse() {
-                return new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("onResponse", response.toString());
-                    }
-                };
-            }
-
-            @Override
-            public Response.ErrorListener onErr() {
-                return new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("onErrorResponse", error.getMessage());
-                    }
-                };
-            }
-        });
-
-
-        VolleyRequestUtil.getInstance(this).ImageRequest("http://api.map.baidu.com/images/weather/day/zhenyu.png", 0, 0, Bitmap.Config.ARGB_8888, new VolleyRequestUtil.VolleyImageInterface() {
-            @Override
-            public Response.Listener<Bitmap> onBitmap() {
-                return new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        mImage.setImageBitmap(response);
-                    }
-                };
-            }
-            @Override
-            public Response.ErrorListener onErr() {
-                return new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("onErrorResponse", error.getMessage());
-                    }
-                };
-            }
-        });
-
-
-
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("app_key","74D2E724FE2B69EF7EA3F38E9400CF71");
-
-        VolleyRequestUtil.getInstance(this).POSTJsonObjectRequest("http://hn216.api.yesapi.cn/?s=App.User.Search", hashMap, new VolleyRequestUtil.VolleyListenerInterface() {
-            @Override
-            public Response.Listener<JSONObject> onResponse() {
-                return new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("szjPOST",""+response);
-                    }
-                };
-            }
-
-            @Override
-            public Response.ErrorListener onErr() {
-                return new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("szjPOST onError",""+error.getMessage());
-                    }
-                };
-            }
-        });
-
-
-    }
-
-    /**
-     * 为封装Volley
-     */
-    private void NotEncapsulated() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest stringRequest = new StringRequest(STRINGREQUEST_URL, new Response.Listener<String>() {
-            @Override//正确返回
-            public void onResponse(String response) {
-                Log.i("StringRequestResponse",response);
-            }   //错误返回
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.i("onErrorResponse",error.getMessage());
-            }
-        });
-
-
-        Map params = new HashMap();
-        params.put("app_key", "74D2E724FE2B69EF7EA3F38E9400CF71");
-        JSONObject jsonObject = new JSONObject(params);
         /**
-         *      参数一:POST声明
-         *      参数二: 请求POST路径
-         *      参数三:JSONObject设置POST的key和value
-         *      参数四:成功返回JSONObject
-         *      参数五:错误返回
+         * //添加 动态权限申请
+         *     implementation 'com.permissionx.guolindev:permission-support:1.2.2'
          */
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,"http://hn216.api.yesapi.cn/?s=App.User.Search",
-                jsonObject,
-                new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i("JsonObjectonResponse", response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("JsonObjecterr", error.getMessage()+"");
-            }
-        });
-
-        ImageRequest imageRequest = new ImageRequest("http://api.map.baidu.com/images/weather/day/zhenyu.png", new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                Log.i("ImageRequestResponse","1111");
-                    mImage.setImageBitmap(response);
-            }
-        }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("onErrorResponse111",error.getMessage()+"");
-            }
-        });
+        PermissionX.init(this)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .onExplainRequestReason(new ExplainReasonCallbackWithBeforeParam() {
+                    @Override
+                    public void onExplainReason(ExplainScope scope, List<String> deniedList, boolean beforeRequest) {
+                        scope.showRequestReasonDialog(deniedList, "即将申请的权限是程序必须依赖的权限", "我已明白");
+                    }
+                })
+                .onForwardToSettings(new ForwardToSettingsCallback() {
+                    @Override
+                    public void onForwardToSettings(ForwardScope scope, List<String> deniedList) {
+                        scope.showForwardToSettingsDialog(deniedList, "您需要去应用程序设置当中手动开启权限", "我已明白");
+                    }
+                })
+                .request(new RequestCallback() {
+                    @Override
+                    public void onResult(boolean allGranted, List<String> grantedList, List<String> deniedList) {
+                        if (allGranted) {
+                            Toast.makeText(MainActivity.this, "所有申请的权限都已通过", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "您拒绝了如下权限：" + deniedList, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
-
-        queue.add(imageRequest);
-        queue.add(jsonObjectRequest);
-        queue.add(stringRequest);
     }
 
-    public void onClickButton(View view) {
-        if (isEncapsulated) {
-                        //封装volley
-                        VolleyRequestUtil.getInstance(this).ImageLoader(image2,
-                                "http://api.map.baidu.com/images/weather/night/duoyun.png",
-                                R.drawable.ic_launcher_foreground,
-                                R.drawable.ic_launcher_background,
-                                new VolleyRequestUtil.VolleyImageLoaderLolderInterface() {
-                                    @Override
-                                    public ImageLoader.ImageCache onCache() {
-                                        return new ImageLoader.ImageCache() {
-                                            @Override
-                                            public Bitmap getBitmap(String url) {
-                                                return null;
-                                            }
+    public void onClickVolleyButton(View view) {
+        startActivity(new Intent(this,VolleyActivity.class));
+    }
 
-                                            @Override
-                                            public void putBitmap(String url, Bitmap bitmap) {
-
-                                            }
-                                        };
-                                    }
-                                }
-                        );
-        }else{
-            //未封装volley
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            /**
-             * 参数一:RequestQueue对象
-             * 参数二:ImageCache()对象
-             */
-            ImageLoader imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
-                @Override   //
-                public Bitmap getBitmap(String url) {
-                    Log.i("ImageLoadergetBitmap",url+"");
-                    return null;
-                }
-
-                @Override
-                public void putBitmap(String url, Bitmap bitmap) {
-                    image2.setImageBitmap(bitmap);
-                    Log.i("ImageLoaderputBitmap",url+"\t\t"+bitmap);
-                }
-            });
-
-            /**
-             *     参数一:需要设置的ImageView对象
-             *     参数二:在图片加载过程中显示默认图片
-             *     参数三:图片加载失败显示
-             */
-            ImageLoader.ImageListener imageListener = ImageLoader.getImageListener(mImage, R.drawable.ic_launcher_foreground, R.drawable.ic_launcher_background);
-
-            /**
-             *  参数一:图片接口
-             *  参数二:  ImageLoader.ImageListener对象
-             *  参数三:最大宽度
-             *  参数四:最大高度
-             */
-            imageLoader.get("http://api.map.baidu.com/images/weather/night/duoyun.png",imageListener,200,200);
-
-
-
-        }
-
-
-
-
+    public void onClickRetrofitButton(View view) {
+        startActivity(new Intent(this,RetrofitActivity.class));
     }
 }
