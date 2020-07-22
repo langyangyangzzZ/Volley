@@ -24,6 +24,9 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 
+/**
+ * 用于定义Retrofit接口
+ */
 public interface ApiServer {
 
     public static String BaseUri = "https://gank.io/api/data/%E7%A6%8F%E5%88%A9/";

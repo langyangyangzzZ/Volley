@@ -7,5 +7,4 @@ public class ApiConfig {
 
     public static final int POST_UP_DATA_GUOCHUANGYUN = 3;
 
-
 }

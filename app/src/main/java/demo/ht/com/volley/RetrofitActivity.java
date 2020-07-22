@@ -43,7 +43,7 @@ public class RetrofitActivity extends AppCompatActivity implements ICommonView {
 
     private TextView mTv;
     private ImageView mImage;
-    private Boolean isEncapsulated = false;     //是否封装
+    private Boolean isEncapsulated = true;     //是否封装
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,17 +144,25 @@ public class RetrofitActivity extends AppCompatActivity implements ICommonView {
             NetManager netManager = NetManager.getNetManager();
             ApiServer netService = netManager.getNetService(ApiServer.GuoChuangYun_BaseUri);
 
-            /**
-             *   @POST 配合 @Body 注解请求数据
+
+            /**     方法一:
+             *      通过netManager.getRequestBody()   获取RequestBody对象
+             */
+            RequestBody requestBody = netManager.getRequestBody(stringHashMap);
+            netManager.method(ApiConfig.POST_UP_DATA_GUOCHUANGYUN,netService.getPOSTBodyGuoCHuangYunBean(requestBody),this);
+
+
+            /**     方法二:
+             * @POST 配合 @Body 注解请求数据
              */
 //            netManager.method(ApiConfig.POST_UP_DATA_GUOCHUANGYUN,netService.getPOSTBodyGuoCHuangYunBean(app_key),this);
 
-            /**
+            /**    方法三:
              * @FormUrlEncoded 配合 @FieldMap请求数据
              * 注意:要想使用@FiledMap 或者 @Filed就必须使用@FormUrlEncoded注解声明
              *      使用@FormUrlEncoded 就必须使用@FiledMap 或者 @Filed
              */
-            netManager.method(ApiConfig.POST_UP_DATA_GUOCHUANGYUN,netService.getPOSTGuoCHuangYunBean(stringHashMap),this);
+          //  netManager.method(ApiConfig.POST_UP_DATA_GUOCHUANGYUN,netService.getPOSTGuoCHuangYunBean(stringHashMap),this);
 
 
         }else{
@@ -247,13 +255,14 @@ public class RetrofitActivity extends AppCompatActivity implements ICommonView {
     private void initUpdata(String path) {
         File file = new File(path);
 
+        //方法一:
         RequestBody requestBody = new MultipartBody.Builder().
                 setType(MultipartBody.FORM)
                 .addFormDataPart("app_key", "74D2E724FE2B69EF7EA3F38E9400CF71")
                 .addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/png"), file))
                 .build();
 
-        Log.i("initUpdataFile", file.getPath() + "\n" + file.getName());
+        //方法二:
         RequestBody fileRQ = RequestBody.create(MediaType.parse("image/png"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), fileRQ);
         RequestBody fb =RequestBody.create(MediaType.parse("text/plain"), "74D2E724FE2B69EF7EA3F38E9400CF71");
@@ -266,13 +275,13 @@ public class RetrofitActivity extends AppCompatActivity implements ICommonView {
             NetManager netManager = NetManager.getNetManager();
             ApiServer netService = netManager.getNetService(ApiServer.GuoChuangYun_BaseUri);
 
-            /**
+            /** 方法一:
              *    使用 @Body 注解 实现图片+参数一起上传
              */
 //            netManager.method(ApiConfig.UP_DATA_IMAEG, netService.getImageBean(requestBody), this);
 
 
-            /**
+            /**  方法二:
              *    使用 @Multipart注解 配合@Part 实现单独上传参数   和  单独上传图片
              */
             netManager.method(ApiConfig.UP_DATA_IMAEG, netService.uploadFile(fb,part), this);

@@ -60,8 +60,13 @@ public class NetManager {
         return sNetManager;
     }
 
+    /**
+     *
+     * @param t 传入接口前半段 注意以/结尾 返回 ApiServer
+     * @param <T>
+     * @return
+     */
     public <T> ApiServer getNetService(T... t) {
-
         /**
          *      使用官方日志拦截器
          *      添加依赖:
@@ -80,6 +85,7 @@ public class NetManager {
         OkHttpClient build = builder.build();
 
         ApiServer  service = new Retrofit.Builder()
+                //传入可变参数是因为这里也可以使用默认接口ApiServer.BaseUri
                 .baseUrl(t != null && t.length != 0 && !TextUtils.isEmpty((String) t[0]) ? (String) t[0] : ApiServer.BaseUri)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -110,7 +116,14 @@ public class NetManager {
                     }
                 });
     }
-    public static RequestBody getRequestBody(HashMap<String, String> hashMap) {
+
+    /**
+     *
+     * 用于POST请求 传入键值对 获取RequestBody
+     * @param hashMap  hashMap键值对
+     * @return
+     */
+    public  RequestBody getRequestBody(HashMap<String, String> hashMap) {
         StringBuffer data = new StringBuffer();
         if (hashMap != null && hashMap.size() > 0) {
             Iterator iter = hashMap.entrySet().iterator();
